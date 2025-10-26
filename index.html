@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Board Objective Test 01</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7209b7;
+            --secondary: #4361ee;
+            --accent: #f72585;
+            --light: #ffffff;
+            --dark: #212529;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 100px; /* Space for fixed button */
+        }
+        
+        /* Header Styles */
+        .header-container {
+            position: relative;
+            text-align: center;
+            margin: 20px 0;
+            padding: 0 15px;
+        }
+        .batch-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(114, 9, 183, 0.2);
+            margin-bottom: 10px;
+        }
+        .main-heading {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+        .sub-heading {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        
+        /* Syllabus Content Styles */
+        .subject-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            padding: 18px;
+            margin: 0 15px 20px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .subject-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .subject-title i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+        
+        .topic-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .topic-item {
+            padding: 10px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            display: flex;
+            align-items: flex-start;
+            font-size: 0.95rem;
+        }
+        
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+        
+        .topic-item i {
+            color: var(--accent);
+            margin-right: 8px;
+            margin-top: 4px;
+            font-size: 0.7rem;
+        }
+        
+        /* Start Test Button */
+        .start-test-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(114, 9, 183, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            width: calc(100% - 30px);
+            max-width: 350px;
+            white-space: nowrap;
+            justify-content: center;
+        }
+        
+        .start-test-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(114, 9, 183, 0.4);
+        }
+        
+        .start-test-btn i {
+            margin-left: 8px;
+        }
+        
+        /* Countdown Styles */
+        .countdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .countdown-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .countdown-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 25vw;
+            color: white;
+            text-shadow: 0 0 15px var(--accent);
+            animation: pulse 0.5s ease-out;
+            transform: scale(0.5);
+            opacity: 0;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Responsive Styles */
+        @media (min-width: 768px) {
+            body {
+                padding-bottom: 120px;
+            }
+            
+            .header-container {
+                margin: 30px 0 40px;
+            }
+            
+            .batch-badge {
+                font-size: 1.2rem;
+                padding: 8px 25px;
+            }
+            
+            .main-heading {
+                font-size: 2.5rem;
+            }
+            
+            .sub-heading {
+                font-size: 1.8rem;
+            }
+            
+            .subject-card {
+                padding: 25px;
+                margin: 0 auto 30px;
+                max-width: 800px;
+            }
+            
+            .subject-title {
+                font-size: 1.8rem;
+            }
+            
+            .topic-item {
+                font-size: 1rem;
+            }
+            
+            .countdown-number {
+                font-size: 20vw;
+            }
+            
+            .start-test-btn {
+                font-size: 1.2rem;
+                padding: 15px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-0">
+        <div class="header-container">
+            <div class="batch-badge">10th Boards 2026</div>
+            <h1 class="main-heading">Board Objective Test 01</h1>
+            <h2 class="sub-heading">Syllabus</h2>
+        </div>
+        
+        <div class="subject-card">
+            <h2 class="subject-title">
+                <i class="fas fa-calculator"></i> MATHEMATICS
+            </h2>
+            <ul class="topic-list">
+                <li class="topic-item">
+                    <i class="fas fa-circle"></i>
+                    <span>Real Numbers, Polynomials</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="subject-card">
+            <h2 class="subject-title">
+                <i class="fas fa-landmark"></i> SST
+            </h2>
+            <ul class="topic-list">
+                <li class="topic-item">
+                    <i class="fas fa-circle"></i>
+                    <span>The Rise of Nationalism in Europe</span>
+                </li>
+            </ul>
+        </div>
+        
+        </div>
+    
+    <button class="start-test-btn" id="startTestBtn">
+        Start Test <i class="fas fa-arrow-right"></i>
+    </button>
+    
+    <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const startBtn = document.getElementById('startTestBtn');
+        const countdownOverlay = document.getElementById('countdownOverlay');
+        const countdownNumber = document.getElementById('countdownNumber');
+        
+        startBtn.addEventListener('click', () => {
+            // Show overlay
+            countdownOverlay.classList.add('active');
+            
+            // Start countdown
+            let count = 3;
+            countdownNumber.textContent = count;
+            countdownNumber.style.animation = 'none';
+            void countdownNumber.offsetWidth; // Trigger reflow
+            countdownNumber.style.animation = 'pulse 0.5s ease-out';
+            
+            const countdownInterval = setInterval(() => {
+                count--;
+                
+                if (count > 0) {
+                    countdownNumber.textContent = count;
+                    countdownNumber.style.animation = 'none';
+                    void countdownNumber.offsetWidth;
+                    countdownNumber.style.animation = 'pulse 0.5s ease-out';
+                } else {
+                    countdownNumber.textContent = "GO!";
+                    countdownNumber.style.animation = 'none';
+                    void countdownNumber.offsetWidth;
+                    countdownNumber.style.animation = 'pulse 0.5s ease-out';
+                    
+                    setTimeout(() => {
+                        clearInterval(countdownInterval);
+                        window.location.href = 'test.html';
+                    }, 500);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
