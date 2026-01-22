@@ -1049,6 +1049,17 @@
     <div class="overlay" onclick="toggleNavPanel()"></div>
 
     <nav class="navbar sticky-top">
+        <!-- USERNAME INPUT BAR -->
+<div class="container-fluid text-center mt-2">
+  <input
+    type="text"
+    id="username"
+    placeholder="Enter Telegram Username (eg: @username)"
+    class="form-control mx-auto"
+    style="max-width:320px;"
+  >
+</div>
+
         <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
             <a class="navbar-brand fw-bold" href="#">
                 <i class="fas fa-graduation-cap me-2"></i>Board Test 01
@@ -1691,6 +1702,9 @@
             `;
 
             quizBox.innerHTML = resultHtml;
+            // 🔥 SEND SCORE TO GOOGLE SHEET
+sendScoreToSheet(totalScore);
+
             populateQuestionLists(correctQuestionsList, incorrectQuestionsList, unattemptedQuestionsList);
         };
 
@@ -1930,6 +1944,35 @@ window.onbeforeunload = function(e) {
 window.addEventListener("DOMContentLoaded", function() {
     alert("If you reload or leave this page, all quiz data will be erased and quiz will start from scratch!");
 });
+        function sendScoreToSheet(score) {
+  const usernameInput = document.getElementById("username");
+
+  if (!usernameInput || usernameInput.value.trim() === "") {
+    console.warn("Username not entered, score not sent");
+    return;
+  }
+
+  const username = usernameInput.value.trim();
+
+  fetch("https://script.google.com/macros/s/AKfycbyf86GWAub8y-sPXjY6HZxMEgv0Bg7BHAf4vQpGM9oggfz5MtXQSNZD9f5vSYggBzhy/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: username,
+      score: score
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("✅ Score saved:", data);
+  })
+  .catch(err => {
+    console.error("❌ Sheet error:", err);
+  });
+}
+
     </script>
 </body>
 </html>
